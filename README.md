@@ -50,9 +50,9 @@ RestfulBooker.Reqnroll.CSharp/
 ## ⚙️ How to Run Locally
 
 1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Someone-anon-coder/RestfulBooker.Reqnroll.CSharp.git
-   cd RestfulBooker.Reqnroll.CSharp
+```bash
+git clone https://github.com/Someone-anon-coder/RestfulBooker.Reqnroll.CSharp.git
+cd RestfulBooker.Reqnroll.CSharp
 
 ```
 
@@ -66,6 +66,7 @@ dotnet build
 3. **Execute tests:**
 ```bash
 dotnet test --logger "console;verbosity=detailed"
+
 ```
 
 
