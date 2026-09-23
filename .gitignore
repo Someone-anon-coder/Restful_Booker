@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# Reqnroll generated code-behind files
+*.feature.cs
+
 # User-specific files
 *.rsuser
 *.suo
