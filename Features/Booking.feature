@@ -8,13 +8,13 @@ Feature: Booking management
     
     @smoke @crud
     Scenario: Create a booking and retrieve it
-        When I create a booking for "Jim" "Brown" with a total price of 111 and deposit paid
+        When I create a booking for "Jim" "Brown" with a total price of 111 and deposit "paid"
         Then the booking is created successfully
         And retrieving the booking by id returns the same details
     
     @crud
     Scenario Outline: Create bookings with different details
-        When I create a booking for "<firstname>" "<lastname>" with a total price of <totalprice> and deposit <depositstatus>
+        When I create a booking for "<firstname>" "<lastname>" with a total price of <totalprice> and deposit "<depositstatus>"
         Then the booking is created successfully
         And retrieving the booking by id returns the same details
 
