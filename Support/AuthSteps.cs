@@ -6,11 +6,8 @@ using RestSharp;
 namespace RestfulBooker.Tests.Support;
 
 [Binding]
-public class AuthSteps(ScenarioState state)
+public class AuthSteps(ScenarioState state, AuthClient authClient, BookingClient bookingClient)
 {
-    readonly BookingClient bookingClient = new(ApiClientFactory.CreateClient());
-    readonly AuthClient authClient = new(ApiClientFactory.CreateClient());
-    
     [Given("the API is available")]
     public async Task GivenTheAPIIsAvailable()
     {
@@ -35,19 +32,19 @@ public class AuthSteps(ScenarioState state)
     }
 
     [Then("the response should contain a non-empty token")]
-    public async Task ThenTheResponseShouldContainANon_EmptyToken()
+    public void ThenTheResponseShouldContainANon_EmptyToken()
     {
         state.Token.Should().NotBeNullOrEmpty();
     }
-    
+
     [Then("the response should contain the reason {string}")]
-    public async Task ThenTheResponseShouldContainTheReason(string reason)
+    public void ThenTheResponseShouldContainTheReason(string reason)
     {
         state.LastAuthResponse!.Data!.Reason.Should().Be(reason);
     }
-    
+
     [Then("the response should not contain a token")]
-    public async Task ThenTheResponseShouldNotContainAToken()
+    public void ThenTheResponseShouldNotContainAToken()
     {
         state.Token.Should().BeNull();
     }

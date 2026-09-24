@@ -6,15 +6,13 @@ using RestfulBooker.Tests.Models;
 namespace RestfulBooker.Tests.Support;
 
 [Binding]
-public class BookingSteps(ScenarioState state)
+public class BookingSteps(ScenarioState state, BookingClient bookingClient)
 {
-    readonly BookingClient bookingClient = new(ApiClientFactory.CreateClient());
-
     [When("I create a booking for {string} {string} with a total price of {int} and deposit {string}")]
     public async Task WhenICreateABookingForWithATotalPriceOfAndDepositPaid(string firstname, string lastname, int totalprice, string depositpaid)
     {
         BookingDates bookingDates = new BookingDates("2020-01-20", "2020-01-22");
-        Booking booking = new Booking(firstname, lastname, totalprice, depositpaid.Equals("paid") ? true:false, bookingDates, "pool");
+        Booking booking = new Booking(firstname, lastname, totalprice, depositpaid == "paid", bookingDates, "pool");
 
         var response = await bookingClient.CreateAsync(booking);
         state.LastResponse = response;
@@ -24,7 +22,7 @@ public class BookingSteps(ScenarioState state)
     }
 
     [Then("the booking is created successfully")]
-    public async Task ThenTheBookingIsCreatedSuccessfully()
+    public void ThenTheBookingIsCreatedSuccessfully()
     {
         ((int)state.LastResponse!.StatusCode).Should().Be(200);
         state.LastResponse.Content.Should().NotBeNull();
@@ -45,7 +43,7 @@ public class BookingSteps(ScenarioState state)
     }
 
     [Then("the response status code is {int}")]
-    public async Task ThenTheResponseStatusCodeIs(int statuscode)
+    public void ThenTheResponseStatusCodeIs(int statuscode)
     {
         ((int)state.LastResponse!.StatusCode).Should().Be(statuscode);
     }
@@ -143,7 +141,7 @@ public class BookingSteps(ScenarioState state)
     }
 
     [Then("the booking deletion is successful and the response status code is {int}")]
-    public async Task ThenTheBookingDeletionIsSuccessfulAndTheResponseStatusCodeIs(int statuscode)
+    public void ThenTheBookingDeletionIsSuccessfulAndTheResponseStatusCodeIs(int statuscode)
     {
         ((int)state.LastResponse!.StatusCode).Should().Be(statuscode);
     }
@@ -156,7 +154,7 @@ public class BookingSteps(ScenarioState state)
     }
 
     [Then("the response status code is not {int}")]
-    public async Task ThenTheResponseStatusCodeIsNot(int statuscode)
+    public void ThenTheResponseStatusCodeIsNot(int statuscode)
     {
         ((int)state.LastResponse!.StatusCode).Should().NotBe(statuscode);
     }

@@ -4,11 +4,8 @@ using RestfulBooker.Tests.Clients;
 namespace RestfulBooker.Tests.Support;
 
 [Binding]
-public class Hooks(ScenarioState state)
+public class Hooks(ScenarioState state, AuthClient authClient, BookingClient bookingClient)
 {
-    readonly BookingClient bookingClient = new(ApiClientFactory.CreateClient());
-    readonly AuthClient authClient = new(ApiClientFactory.CreateClient());
-
     [BeforeTestRun]
     public static async Task OnceBeforeAnything()
     {
@@ -37,9 +34,9 @@ public class Hooks(ScenarioState state)
             {
                 await bookingClient.DeleteAsync(id, state.Token);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                Console.Write("Could not delete Booking: " + id);
+                Console.WriteLine($"Could not delete booking {id}: {ex.Message}");
             }
         }
     }
