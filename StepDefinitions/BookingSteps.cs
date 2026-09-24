@@ -2,8 +2,9 @@ using FluentAssertions;
 using Reqnroll;
 using RestfulBooker.Tests.Clients;
 using RestfulBooker.Tests.Models;
+using RestfulBooker.Tests.Support;
 
-namespace RestfulBooker.Tests.Support;
+namespace RestfulBooker.Tests.StepDefinitions;
 
 [Binding]
 public class BookingSteps(ScenarioState state, BookingClient bookingClient)

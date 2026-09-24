@@ -13,21 +13,23 @@ This is a demo/practice project against a shared public API, not a production sy
 ```
 Restful_Booker/
 ├── Features/
-│   ├── Auth.feature          # authentication scenarios
-│   └── Booking.feature       # booking CRUD + negative scenarios
+│   ├── Auth.feature              # authentication scenarios
+│   └── Booking.feature           # booking CRUD + negative scenarios
+├── StepDefinitions/
+│   ├── AuthSteps.cs              # step definitions for Auth.feature
+│   └── BookingSteps.cs           # step definitions for Booking.feature
 ├── Clients/
-│   ├── ApiClientFactory.cs   # builds a RestClient with base URL + default headers
-│   ├── AuthClient.cs         # POST /auth
-│   └── BookingClient.cs      # /booking and /ping calls
+│   ├── ApiClientFactory.cs       # builds a RestClient with base URL + default headers
+│   ├── AuthClient.cs             # POST /auth
+│   └── BookingClient.cs          # /booking and /ping calls
 ├── Models/
-│   ├── AuthModels.cs         # AuthRequest, AuthResponse
-│   └── BookingModels.cs      # Booking, BookingDates, CreateBookingResponse
+│   ├── AuthModels.cs             # AuthRequest, AuthResponse
+│   └── BookingModels.cs          # Booking, BookingDates, CreateBookingResponse
 ├── Support/
-│   ├── ScenarioState.cs      # typed per-scenario state (injected)
-│   ├── TestConfig.cs         # base URL + creds, env-var overridable
-│   ├── Hooks.cs              # ping check, auth setup, booking cleanup
-│   ├── AuthSteps.cs          # step definitions for Auth.feature
-│   └── BookingSteps.cs       # step definitions for Booking.feature
+│   ├── ScenarioState.cs          # typed per-scenario state (injected)
+│   ├── TestConfig.cs             # base URL + creds, env-var overridable
+│   ├── ClientRegistrations.cs    # registers one shared RestClient/AuthClient/BookingClient per scenario
+│   └── Hooks.cs                  # ping check, auth setup, booking cleanup
 ├── .github/workflows/api-tests.yml
 ├── reqnroll.json
 └── RestfulBooker.Tests.csproj
@@ -36,6 +38,8 @@ Restful_Booker/
 ### How state flows
 
 Reqnroll creates one `ScenarioState` instance per scenario and hands it to every step/hook class constructor that asks for it — the same idea as a request-scoped bean, but for a test scenario instead of an HTTP request. `Hooks`, `AuthSteps`, and `BookingSteps` all take `ScenarioState state` as a constructor parameter, so a token fetched in a `[BeforeScenario("requires_auth")]` hook is visible to every step that runs afterwards, without any shared mutable globals or string-keyed context lookups.
+
+A `[BeforeScenario(Order = 0)]` hook in `ClientRegistrations` builds a single `RestClient` (and the `AuthClient`/`BookingClient` wrapping it) and registers them into Reqnroll's DI container before anything else runs, so every step/hook class receives the same client instances through constructor injection instead of each one constructing its own.
 
 Booking IDs created during a scenario are tracked in `ScenarioState.CreatedBookingIds` and deleted in an `[AfterScenario]` hook, so scenarios clean up after themselves instead of leaving orphaned bookings on the shared public API.
 
