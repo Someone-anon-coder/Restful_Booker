@@ -8,8 +8,8 @@ namespace RestfulBooker.Tests.Support;
 [Binding]
 public class AuthSteps(ScenarioState state)
 {
-    BookingClient bookingClient = new(ApiClientFactory.CreateClient());
-    AuthClient authClient = new(ApiClientFactory.CreateClient());
+    readonly BookingClient bookingClient = new(ApiClientFactory.CreateClient());
+    readonly AuthClient authClient = new(ApiClientFactory.CreateClient());
     
     [Given("the API is available")]
     public async Task GivenTheAPIIsAvailable()
